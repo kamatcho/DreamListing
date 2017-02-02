@@ -30,11 +30,17 @@
                                     <constraint firstAttribute="height" constant="28" id="3hI-eQ-oDJ"/>
                                 </constraints>
                                 <segments>
-                                    <segment title="First"/>
-                                    <segment title="Second"/>
-                                    <segment title=""/>
+                                    <segment title="Newest"/>
+                                    <segment title="Title"/>
+                                    <segment title="Price"/>
                                 </segments>
                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="materialDesign" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="SortItemData:" destination="BYZ-38-t0r" eventType="valueChanged" id="c90-JR-wjs"/>
+                                </connections>
                             </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="150" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Nz8-WM-62q">
                                 <rect key="frame" x="16" y="137" width="343" height="530"/>
@@ -120,7 +126,6 @@
                                             <outlet property="price" destination="m4S-8b-Io7" id="YTP-YM-vz3"/>
                                             <outlet property="thumb" destination="l0v-oo-tfv" id="TUO-oQ-chS"/>
                                             <outlet property="title" destination="42K-To-iWy" id="MfM-ly-4Q3"/>
-                                            <segue destination="JEp-Eh-L6P" kind="show" identifier="EditOrDeleteItem" id="gvv-Pl-rqe"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -145,8 +150,10 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="SegmentItemControl" destination="a9m-Tu-Vf9" id="pCb-wZ-SMg"/>
                         <outlet property="segment" destination="a9m-Tu-Vf9" id="jgX-6b-ZBV"/>
                         <outlet property="tableView" destination="Nz8-WM-62q" id="tJQ-Vm-8Yl"/>
+                        <segue destination="JEp-Eh-L6P" kind="show" identifier="EditOrDeleteItem" id="JR3-gv-508"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -195,23 +202,11 @@
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="19"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tW4-ue-FOm">
-                                <rect key="frame" x="122" y="585" width="123" height="30"/>
-                                <color key="backgroundColor" red="0.88235294119999996" green="0.88235294119999996" blue="0.88235294119999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="Save"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="materialDesign" value="YES"/>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="SaveData:" destination="JEp-Eh-L6P" eventType="touchUpInside" id="AOa-I2-dWx"/>
-                                </connections>
-                            </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OGC-lY-cLM">
-                                <rect key="frame" x="87" y="338" width="202" height="104"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="imagePick" translatesAutoresizingMaskIntoConstraints="NO" id="OGC-lY-cLM">
+                                <rect key="frame" x="87" y="338" width="202" height="126"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GZC-0x-iDM">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GZC-0x-iDM">
                                 <rect key="frame" x="87" y="338" width="202" height="104"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal">
                                     <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -221,7 +216,7 @@
                                 </connections>
                             </button>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iMS-ke-g3Q">
-                                <rect key="frame" x="59" y="474" width="259" height="85"/>
+                                <rect key="frame" x="59" y="484" width="259" height="85"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="85" id="w9x-gj-gsJ"/>
                                 </constraints>
@@ -229,36 +224,48 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="iMS-ke-g3Q" firstAttribute="top" secondItem="OGC-lY-cLM" secondAttribute="bottom" constant="32" id="36w-sT-HRm"/>
+                            <constraint firstItem="iMS-ke-g3Q" firstAttribute="top" secondItem="OGC-lY-cLM" secondAttribute="bottom" constant="20" id="36w-sT-HRm"/>
                             <constraint firstItem="AkP-Ku-xLZ" firstAttribute="trailing" secondItem="H5I-qG-tse" secondAttribute="trailingMargin" id="6m4-9e-ABk"/>
+                            <constraint firstItem="GZC-0x-iDM" firstAttribute="top" secondItem="OGC-lY-cLM" secondAttribute="top" id="74M-lg-0DG"/>
                             <constraint firstItem="AkP-Ku-xLZ" firstAttribute="leading" secondItem="H5I-qG-tse" secondAttribute="leadingMargin" id="8Ws-Ou-x1r"/>
                             <constraint firstAttribute="trailingMargin" secondItem="OGC-lY-cLM" secondAttribute="trailing" constant="70" id="9lh-zW-GtV"/>
                             <constraint firstItem="iMS-ke-g3Q" firstAttribute="leading" secondItem="H5I-qG-tse" secondAttribute="leadingMargin" constant="43" id="RIQ-nW-156"/>
                             <constraint firstItem="OGC-lY-cLM" firstAttribute="top" secondItem="hXL-Vw-u5O" secondAttribute="bottom" constant="15" id="Tnw-CV-1Eg"/>
                             <constraint firstItem="hXL-Vw-u5O" firstAttribute="top" secondItem="AkP-Ku-xLZ" secondAttribute="bottom" constant="25" id="Tzi-Li-nIH"/>
+                            <constraint firstItem="GZC-0x-iDM" firstAttribute="leading" secondItem="OGC-lY-cLM" secondAttribute="leading" id="Uss-5Q-QlP"/>
                             <constraint firstItem="OGC-lY-cLM" firstAttribute="leading" secondItem="H5I-qG-tse" secondAttribute="leadingMargin" constant="71" id="VzN-e4-t7A"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="tW4-ue-FOm" secondAttribute="trailing" constant="114" id="W3A-vv-fLQ"/>
-                            <constraint firstItem="tW4-ue-FOm" firstAttribute="leading" secondItem="H5I-qG-tse" secondAttribute="leadingMargin" constant="106" id="Wbw-iF-pZ3"/>
-                            <constraint firstItem="eas-gu-9Ej" firstAttribute="top" secondItem="tW4-ue-FOm" secondAttribute="bottom" constant="8" id="aU9-ci-LMB"/>
                             <constraint firstItem="8aD-gF-lm7" firstAttribute="top" secondItem="PUG-eB-pDC" secondAttribute="bottom" constant="28" id="b1z-QQ-ppZ"/>
-                            <constraint firstItem="tW4-ue-FOm" firstAttribute="top" secondItem="iMS-ke-g3Q" secondAttribute="bottom" constant="26" id="gir-aP-ojR"/>
+                            <constraint firstItem="iMS-ke-g3Q" firstAttribute="top" secondItem="GZC-0x-iDM" secondAttribute="bottom" constant="42" id="by2-mG-1l9"/>
+                            <constraint firstItem="iMS-ke-g3Q" firstAttribute="centerX" secondItem="GZC-0x-iDM" secondAttribute="centerX" id="hF0-Sw-1iQ"/>
                             <constraint firstItem="hXL-Vw-u5O" firstAttribute="trailing" secondItem="H5I-qG-tse" secondAttribute="trailingMargin" id="jXb-qc-c2X"/>
                             <constraint firstAttribute="trailingMargin" secondItem="iMS-ke-g3Q" secondAttribute="trailing" constant="41" id="mSA-EJ-GJz"/>
                             <constraint firstItem="hXL-Vw-u5O" firstAttribute="leading" secondItem="H5I-qG-tse" secondAttribute="leadingMargin" id="oKx-dP-3aM"/>
                             <constraint firstItem="AkP-Ku-xLZ" firstAttribute="top" secondItem="8aD-gF-lm7" secondAttribute="bottom" constant="25" id="pnq-Kx-1lt"/>
                             <constraint firstItem="8aD-gF-lm7" firstAttribute="leading" secondItem="H5I-qG-tse" secondAttribute="leadingMargin" id="r0L-yg-8zF"/>
+                            <constraint firstItem="eas-gu-9Ej" firstAttribute="top" secondItem="iMS-ke-g3Q" secondAttribute="bottom" constant="54" id="xmV-kG-ocQ"/>
                             <constraint firstItem="8aD-gF-lm7" firstAttribute="trailing" secondItem="H5I-qG-tse" secondAttribute="trailingMargin" id="y7w-EA-rvY"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Add / Edit" id="7W8-xp-MVQ">
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="c9F-Oq-7QX">
-                            <connections>
-                                <action selector="BuBack:" destination="JEp-Eh-L6P" id="maw-6S-iuL"/>
-                            </connections>
-                        </barButtonItem>
+                        <leftBarButtonItems>
+                            <barButtonItem title="Back" id="c9F-Oq-7QX">
+                                <connections>
+                                    <action selector="BuBack:" destination="JEp-Eh-L6P" id="maw-6S-iuL"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Save" id="Rc3-BS-axY">
+                                <connections>
+                                    <action selector="AnotherSaveBu:" destination="JEp-Eh-L6P" id="W79-Xi-acw"/>
+                                </connections>
+                            </barButtonItem>
+                        </leftBarButtonItems>
                         <rightBarButtonItems>
-                            <barButtonItem systemItem="trash" id="2Ks-gQ-XvH"/>
+                            <barButtonItem systemItem="trash" id="2Ks-gQ-XvH">
+                                <connections>
+                                    <action selector="DeleteItemBu:" destination="JEp-Eh-L6P" id="yGc-1j-pGK"/>
+                                </connections>
+                            </barButtonItem>
                             <barButtonItem title="Add Store" id="q5s-Qc-QGy">
                                 <connections>
                                     <segue destination="Gep-WR-rz2" kind="show" id="3dT-Rm-3Z9"/>
@@ -359,9 +366,10 @@
         </scene>
     </scenes>
     <resources>
+        <image name="imagePick" width="300" height="300"/>
         <image name="tesla" width="800" height="489"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="gvv-Pl-rqe"/>
+        <segue reference="JR3-gv-508"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -85,31 +85,7 @@ class AddAndEditItem: UIViewController , UIPickerViewDelegate , UIPickerViewData
         present(ImagePicker, animated: true, completion: nil)
     }
     
-    // Add Or Edit Item Functions
-    @IBAction func SaveData(_ sender: Any) {
-        
-        let itemData : Item!
-        if EditOrDelete == nil {
-             itemData = Item(context: context)
-           
-        }else {
-            itemData = EditOrDelete
-        }
-        itemData.created = NSDate()
-        itemData.title = ProductName.text
-        itemData.price = Double(ProductPrice.text!)!
-        let picture = Image(context: context)
-        picture.image = ImageTool.image
-        itemData.toImage = picture
-        itemData.toStore = StoreData[PickerStoreView.selectedRow(inComponent: 0)]
-        
-        itemData.details = ProductDetails.text
-        do{
-            ad.saveContext()
-            
-        }
-    }
-    // End Of Saving Data
+
     
     // Load Single Item Funtions
     func LoadItem() {
@@ -135,6 +111,42 @@ class AddAndEditItem: UIViewController , UIPickerViewDelegate , UIPickerViewData
         }
     }
     // End Of Load Items
+    
+    @IBAction func AnotherSaveBu(_ sender: Any) {
+        let itemData : Item!
+        if EditOrDelete == nil {
+            itemData = Item(context: context)
+            
+        }else {
+            itemData = EditOrDelete
+        }
+        itemData.created = NSDate()
+        itemData.title = ProductName.text
+        itemData.price = Double(ProductPrice.text!)!
+        let picture = Image(context: context)
+        picture.image = ImageTool.image
+        itemData.toImage = picture
+        itemData.toStore = StoreData[PickerStoreView.selectedRow(inComponent: 0)]
+        
+        itemData.details = ProductDetails.text
+        do{
+            ad.saveContext()
+            _ = navigationController?.popViewController(animated: true)
+            
+        }catch {
+            print("error")
+        }
+
+    }
+    
+    @IBAction func DeleteItemBu(_ sender: Any) {
+        if EditOrDelete != nil {
+            context.delete(EditOrDelete!)
+            ad.saveContext()
+            _ = navigationController?.popViewController(animated: true)
+
+        }
+    }
     
     @IBAction func BuBack(_ sender: Any) {
         _ = navigationController?.popViewController(animated: true)

@@ -10,15 +10,19 @@ import UIKit
 import CoreData
 class MainVc: UIViewController , UITableViewDelegate , UITableViewDataSource , NSFetchedResultsControllerDelegate {
 
+    @IBOutlet weak var SegmentItemControl: UISegmentedControl!
     @IBOutlet weak var segment: UISegmentedControl!
     @IBOutlet weak var tableView: UITableView!
-    var controller :NSFetchedResultsController<Item>!
+    var controller:NSFetchedResultsController<Item>!
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+        
         attempFetch()
+        self.tableView.reloadData()
         
     }
     // Start Table Function
@@ -53,8 +57,19 @@ class MainVc: UIViewController , UITableViewDelegate , UITableViewDataSource , N
     // Start Load Data
     func attempFetch(){
         let fetchrequest : NSFetchRequest<Item> = Item.fetchRequest()
-        let datasort = NSSortDescriptor(key: "created", ascending: false)
-        fetchrequest.sortDescriptors = [datasort]
+        let datesort = NSSortDescriptor(key: "created", ascending: false)
+        let titlesort = NSSortDescriptor(key: "title", ascending: true)
+        let priceesort = NSSortDescriptor(key: "price", ascending: true)
+
+        if SegmentItemControl.selectedSegmentIndex == 0 {
+            fetchrequest.sortDescriptors = [datesort]
+        } else if SegmentItemControl.selectedSegmentIndex == 1 {
+            fetchrequest.sortDescriptors = [titlesort]
+
+        } else if SegmentItemControl.selectedSegmentIndex == 2 {
+           fetchrequest.sortDescriptors = [priceesort]
+        }
+        
         self.controller = NSFetchedResultsController(fetchRequest: fetchrequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         self.controller.delegate = self
 
@@ -63,48 +78,45 @@ class MainVc: UIViewController , UITableViewDelegate , UITableViewDataSource , N
         }catch {
             print("error")
         }
-        func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-            tableView.beginUpdates()
-        }
-        func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-            tableView.endUpdates()
-        }
-        
-        func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-            // data fetch
-            switch(type) {
-                
-            case.insert:
-                if let indexPath = newIndexPath {
-                    tableView.insertRows(at: [indexPath], with: .fade)
-                }
-                break
-            case.delete:
-                if let indexPath = indexPath {
-                    tableView.deleteRows(at: [indexPath], with: .fade)
-                }
-                break
-            case.update:
-                if let indexPath = indexPath {
-                    let cell = tableView.cellForRow(at: indexPath) as! ItemCell
-                    configureCell(cell: cell, indexPath: indexPath )
-                }
-                break
-            case.move:
-                if let indexPath = indexPath {
-                    tableView.deleteRows(at: [indexPath], with: .fade)
-                }
-                if let indexPath = newIndexPath {
-                    tableView.insertRows(at: [indexPath], with: .fade)
-                }
-                break
-                
-            }
-         
-    
-        }
     }
-    // End Of Load Data
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
+    }
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        // data fetch
+        switch(type) {
+            
+        case.insert:
+            if let indexPath = newIndexPath {
+                tableView.insertRows(at: [indexPath], with: .fade)
+            }
+            break
+        case.delete:
+            if let indexPath = indexPath {
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+            break
+        case.update:
+            if let indexPath = indexPath {
+                let cell = tableView.cellForRow(at: indexPath) as! ItemCell
+                configureCell(cell: cell, indexPath: indexPath )
+            }
+            break
+        case.move:
+            if let indexPath = indexPath {
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+            if let indexPath = newIndexPath {
+                tableView.insertRows(at: [indexPath], with: .fade)
+            }
+            break
+            
+        }
+    }    // End Of Load Data
     
     // Edit Or Delet Item
     // Spacify Which Row Is Selected
@@ -125,7 +137,12 @@ class MainVc: UIViewController , UITableViewDelegate , UITableViewDataSource , N
             }
         }
     }
+    // Sort Data
     
+    @IBAction func SortItemData(_ sender: Any) {
+        attempFetch()
+        tableView.reloadData()
+    }
 
 }
 
